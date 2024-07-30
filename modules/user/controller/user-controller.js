@@ -28,16 +28,20 @@ export const addUser = async (request, response)=>{
 export const addFriend = async (request, response)=>{
     try{
         const {userId, friendId} = request.body;
+        console.log(request.body)
         const user = await userModel.findOne({userId});
+        console.log(user)
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
           }
 
-        const friend =await userModel.findOne({friendId});
+        const friend =await userModel.findOne({userId:friendId});
+        console.log(friend)
         if (!friend) {
             return res.status(404).json({ message: 'Friend not found'});
         }
-        user.friendList.push(friendId);
+        console.log(friend._id)
+        user.friendList.push(friend._id);
         await user.save(); 
 
     }catch{
