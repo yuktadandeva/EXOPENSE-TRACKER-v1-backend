@@ -40,7 +40,9 @@ export const addFriend = async (request, response)=>{
         if (!friend) {
             return res.status(404).json({ message: 'Friend not found'});
         }
-        console.log(friend._id)
+        const friendObjectId = mongoose.Types.ObjectId(friend._id);
+
+        console.log(friendObjectId)
         user.friendList.push(friend._id);
         await user.save(); 
 
