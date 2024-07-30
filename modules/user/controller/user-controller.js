@@ -1,3 +1,4 @@
+import { response } from "express";
 import { userModel } from "../model/user-model.js";
 
 export const viewUsers = async ( request,response, next)=>{
@@ -22,5 +23,21 @@ export const addUser = async (request, response)=>{
     }catch(err){
         console.log("error is", err)
         response.status(500).json({message:"user cannot be added some error"})
+    }
+}
+
+export const addFriend = async (request, response)=>{
+    try{
+        const {userId, friendId} = request.body;
+        const user = await userModel.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+          }
+
+        const friend =await userModel.findById(friendId);
+        user.friendList.push(friend);
+
+    }catch{
+
     }
 }
