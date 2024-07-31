@@ -28,15 +28,14 @@ export const addUser = async (request, response)=>{
 export const addFriend = async (request, response)=>{
     try{
         const {userId, friendId} = request.body;
-        console.log(request.body)
         const user = await userModel.findOne({userId});
-        console.log(user)
+
         if (!user) {
             return response.status(404).json({ message: 'User not found' });
           }
 
         const friend =await userModel.findOne({userId:friendId});
-        console.log(friend)
+
         if (!friend) {
             return response.status(404).json({ message: 'Friend not found'});
         }
@@ -57,9 +56,15 @@ export const addFriend = async (request, response)=>{
     }
 }
 
-export const getFriendList = (request, response, next)=>{
+export const getUser = async (request, response, next)=>{
     try{
         const {userId} = request.body;
+        const user = await userModel.find({userId}).populate({
+            path: 'friendList',
+            select: 'name userId userImg'
+        }).exec();
+        console.log(user);
+        response.status(200).json({"user": user})
     }catch(error){
         response.status(500).json({message:"error in getting friendList"})
     }
