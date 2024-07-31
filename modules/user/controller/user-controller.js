@@ -32,21 +32,36 @@ export const addFriend = async (request, response)=>{
         const user = await userModel.findOne({userId});
         console.log(user)
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return response.status(404).json({ message: 'User not found' });
           }
 
         const friend =await userModel.findOne({userId:friendId});
         console.log(friend)
         if (!friend) {
-            return res.status(404).json({ message: 'Friend not found'});
+            return response.status(404).json({ message: 'Friend not found'});
         }
-        const friendObjectId = mongoose.Types.ObjectId(friend._id);
 
-        console.log(friendObjectId)
-        user.friendList.push(friend._id);
+        const friendObjectId =friend._id;
+        
+        if(user.friendList.includes(friendId)){
+          return response.status(400).json({message:"friend already added "})
+        }
+
+        user.friendList.push(friendObjectId);
         await user.save(); 
+        response.status(200).json({message:"added successfully"})
 
-    }catch{
+    }catch(error){
+    console.log("error in adding", error)
     response.status(500).json({message:"error in adding"})
     }
+}
+
+export const getFriendList = (request, response, next)=>{
+    try{
+        const {userId} = request.body;
+    }catch(error){
+        response.status(500).json({message:"error in getting friendList"})
+    }
+
 }
