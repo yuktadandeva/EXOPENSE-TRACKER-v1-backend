@@ -58,11 +58,22 @@ export const addFriend = async (request, response)=>{
 
 export const getUser = async (request, response, next)=>{
     try{
-        const {userId} = request.body;
-        const user = await userModel.find({userId}).populate({
+        const {userId, password} = request.body;
+        console.log(request.body)
+        const user = await userModel.findOne({userId}).populate({
             path: 'friendList',
             select: 'name userId userImg'
         }).exec();
+
+        if(!user){
+        return response.status(400).json({message:"user not found"})
+        }
+
+        console.log(user.password);
+        if(user.password!== password){
+        return response.status(400).json({message:"invalid password"})
+        }
+
         console.log(user);
         response.status(200).json({"user": user})
     }catch(error){

@@ -5,8 +5,8 @@ import { userRoutes } from "./modules/user/routes/user-routes.js";
 import cors from "cors"
 
 const app = e();
-app.use(e.json())
-app.use(cors())
+app.use(e.json());
+app.use(cors());
 dotenv.config();
 
 app.use("/", userRoutes);
