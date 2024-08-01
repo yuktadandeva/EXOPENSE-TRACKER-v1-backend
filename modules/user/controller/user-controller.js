@@ -10,8 +10,8 @@ export const viewUsers = async ( request,response, next)=>{
 }
 
 export const addUser = async (request, response)=>{
-    const user = request.body;
-
+    const user = request.body.info;
+    console.log(request.body)
     try{
     const doc = await userModel.create(user);
     if(doc && doc._id){
