@@ -10,6 +10,5 @@ const userSchema = mongoose.Schema({
     friendList: { type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'users' }], default: [] }
 });
 
-
 export const userModel = mongoose.model('users', userSchema);
 
