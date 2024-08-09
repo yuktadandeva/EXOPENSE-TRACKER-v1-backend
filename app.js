@@ -10,7 +10,7 @@ app.use(e.json());
 app.use(cors());
 dotenv.config();
 
-app.use("/", userRoutes);
+app.use("/", userRoutes)
 app.use("/", billRoutes)
 
 const PORT = 4444;
@@ -27,6 +27,6 @@ promise.then(r=>{
     })    
 
 }).catch(err=>{
-    console.log("Application crash DB is not connecting")
+    console.log("Application crash DB is not connecting", err)
 })
 
