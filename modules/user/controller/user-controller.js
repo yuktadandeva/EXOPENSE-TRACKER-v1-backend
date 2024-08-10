@@ -67,7 +67,7 @@ export const getFriendList = async (request, response, next)=>{
             select:'name userId userImg'
         }).exec();
 
-        return response.status(200).json({friendList:doc})
+        return response.status(200).json({user:doc})
     }catch(error){
         return response.status(500).json({message:"error in getting friend list"})
     }
