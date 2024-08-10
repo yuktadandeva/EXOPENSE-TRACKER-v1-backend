@@ -58,6 +58,21 @@ console.log(friend)
     }
 }
 
+export const getFriendList = async (request, response, next)=>{
+    try{
+        const {name} = request.query;
+
+        const doc =await userModel.find({name}).populate({
+            path: 'friendList',
+            select:'name userId userImg'
+        }).exec();
+
+        return response.status(200).json({friendList:doc})
+    }catch(error){
+        return response.status(500).json({message:"error in getting friend list"})
+    }
+}
+
 export const getUser = async (request, response, next)=>{
     try{
         const {userId, password} = request.body;
