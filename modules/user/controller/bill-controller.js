@@ -3,17 +3,20 @@ import { billModel } from "../model/bill-model.js";
 
 export const addBill = async (request, response, next)=>{
     try{
-        const bill = request.body;
+        const bill= request.body.bill;
         console.log("billDetails are", bill);
 
         const doc = await billModel.create(bill);
         if(doc && doc._id){
-            response.status(200).json({message:"bill successfully madeS"})
+            response.status(200).json({message:"bill successfully made"})
+            console.log("bill added")
         }else{
+            console.log("bill not added")
             response.status(400).json({message:"bill not added some error"})
         }
-    }catch{
-      response.status(400).json({message:"error"})
+    }catch(error){
+        console.log("Error", error)
+      response.status(500).json({message:"error"})
 
     }
 }
