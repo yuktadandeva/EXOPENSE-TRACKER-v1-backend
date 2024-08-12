@@ -21,7 +21,14 @@ export const addBill = async (request, response, next)=>{
         }
 
         //adding info to the user
-        const user = await userModel.find()
+        const user = await userModel.findOne({_id:userId});
+        user.bills.push(bill);
+        await user.save();
+        if(!user.bills){
+            response.status(200).json({message:"successfully updated user bills"})
+        }else{
+            response.status(400).json({message:"error in updation"})
+        }
 
     }catch(error){
         console.log("Error", error)
