@@ -1,11 +1,16 @@
 import { request, response } from "express";
 import { billModel } from "../model/bill-model.js";
+import { userModel } from "../model/user-model.js";
 
 export const addBill = async (request, response, next)=>{
     try{
         const bill= request.body.bill;
         console.log("billDetails are", bill);
+        
+        const userId = request.body.bill.createdBy;
+        console.log(userId)
 
+        //making bill
         const doc = await billModel.create(bill);
         if(doc && doc._id){
             response.status(200).json({message:"bill successfully made", billId:doc._id})
@@ -14,6 +19,10 @@ export const addBill = async (request, response, next)=>{
             console.log("bill not added")
             response.status(400).json({message:"bill not added some error"})
         }
+
+        //adding info to the user
+        const user = await userModel.find()
+
     }catch(error){
         console.log("Error", error)
       response.status(500).json({message:"error"})
@@ -23,8 +32,8 @@ export const addBill = async (request, response, next)=>{
 
 export const addFriendGroup = async(request, response, next)=>{
     try{
-        const {billId, friendIds} = request.body;
-
+        const {billId, friendIds} = request.body.data;
+        console.log(request.body.data)
         const bill= await billModel.findOne({_id:billId});
         if (!bill) {
             return response.status(404).json({ message: "Bill not found" });
