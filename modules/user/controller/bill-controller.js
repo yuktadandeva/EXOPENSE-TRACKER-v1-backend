@@ -8,7 +8,7 @@ export const addBill = async (request, response, next)=>{
 
         const doc = await billModel.create(bill);
         if(doc && doc._id){
-            response.status(200).json({message:"bill successfully made"})
+            response.status(200).json({message:"bill successfully made", billId:doc._id})
             console.log("bill added")
         }else{
             console.log("bill not added")
