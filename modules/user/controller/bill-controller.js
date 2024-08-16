@@ -14,27 +14,44 @@ export const addBill = async (request, response, next)=>{
         const doc = await billModel.create(bill);
         if(doc && doc._id){
             response.status(200).json({message:"bill successfully made", billId:doc._id})
-            console.log("bill added")
+            console.log("bill added");
+            
+            updateUserBills(userId, doc._id);
+            console.log("updateuserbills called")
         }else{
             console.log("bill not added")
             response.status(400).json({message:"bill not added some error"})
         }
 
         //adding info to the user
-        const user = await userModel.findOne({_id:userId});
-        user.bills.push(bill);
-        await user.save();
-        if(!user.bills){
-            response.status(200).json({message:"successfully updated user bills"})
-        }else{
-            response.status(400).json({message:"error in updation"})
-        }
+
 
     }catch(error){
         console.log("Error", error)
       response.status(500).json({message:"error"})
 
     }
+}
+
+export const updateUserBills= async (userId,billId)=>{
+    try{
+        console.log("bill",billId,"userId",userId);
+        const user = await userModel.findOne({_id:userId});
+        console.log("user to add bill", user.bills);
+        user.bills.push(billId);
+
+        await user.save();
+        console.log(user.bills);
+        if(user.bills.includes(billId)){
+            console.log("bills", user.bills);
+            console.log("successfully updated user bills")
+        }else{
+            console.log("bill not added")
+        }
+    }catch(error){
+            console.log("error in updating", error)
+    }
+   
 }
 
 export const addFriendGroup = async(request, response, next)=>{
