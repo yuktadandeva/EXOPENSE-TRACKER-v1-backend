@@ -18,47 +18,16 @@ export const addBill = async (request, response, next)=>{
             
             //adding info to the user
             updateUserBills(userId, doc._id);
-            //adding info to the friends
-            updateInFriendsBills(bill, doc._id);
-            
+           
         }else{
             console.log("bill not added")
             response.status(400).json({message:"bill not added some error"})
         }
-
-        
-
-
     }catch(error){
         console.log("Error", error)
       response.status(500).json({message:"error"})
 
     }
-}
-
-//add friend in user friend list
-export const updateInFriendsBills = async( billId, friendId)=>{
-     try{
-        
-        const trackBills = [];
-       
-            console.log("current friendId", friendId)
-            const user = await userModel.findOne({_id:friendId});
-            console.log("user in friend bill", user);
-            user.bills.push(billId);
-            trackBills.push(billId);
-            console.log("friend bills", user);
-            await user.save();
-    
-        
-        if(trackBills.includes(billId)){
-            console.log("successfully added bill in friends");
-        }else{
-            console.log("cannot add in friends bills")
-        }
-     }catch(error){
-       console.log("error in adding friends bill", error)
-     }
 }
 
 //add new bills in user bills
@@ -100,7 +69,7 @@ export const addFriendGroup = async(request, response, next)=>{
                 alreadyAddedFriends.push(friendId)
 
                 //adding billId in friends bills
-                updateInFriendsBills(billId, friendId);
+                await updateInFriendsBills(billId, friendId);
             }else{
             bill.friendGroup.push(friendId);
         }
@@ -137,3 +106,28 @@ export const updateShare=async(request, response, next)=>{
         return response.status(400).json({message:"cannot update share"})
     }
 }
+
+//add new bills in friend's bills
+
+export const updateInFriendsBills = async( billId, friendId)=>{
+    try{
+       const trackBills = [];
+           console.log("current friendId", friendId)
+           const user = await userModel.findOne({_id:friendId});
+           console.log("user in friend bill", user);
+           user.bills.push(billId);
+           trackBills.push(billId);
+           console.log("friend bills", user);
+           await user.save();
+   
+       
+       if(trackBills.includes(billId)){
+           console.log("successfully added bill in friends");
+       }else{
+           console.log("cannot add in friends bills")
+       }
+    }catch(error){
+      console.log("error in adding friends bill", error)
+    }
+}
+
