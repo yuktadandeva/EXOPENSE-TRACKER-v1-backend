@@ -66,12 +66,11 @@ export const addFriendGroup = async(request, response, next)=>{
        for(let friendId of friendIds){
             if(bill.friendGroup.includes(friendId)){
                 
-                alreadyAddedFriends.push(friendId)
-
-                //adding billId in friends bills
-                await updateInFriendsBills(billId, friendId);
+                alreadyAddedFriends.push(friendId);
             }else{
             bill.friendGroup.push(friendId);
+              //adding billId in friends bills
+              await updateInFriendsBills(billId, friendId);
         }
 
         };
