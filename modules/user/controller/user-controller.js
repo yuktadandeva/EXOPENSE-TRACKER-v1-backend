@@ -82,16 +82,22 @@ export const getUser = async (request, response, next)=>{
             select: 'name userId userImg'
         }).populate({
             path: 'userBills',
-            select:'billAmount billActivity createdBy friendGroup share', populate: {
+            select:'billAmount billActivity createdBy friendGroup share', populate:[{
                 path: 'createdBy', 
                 select: 'name userId userImg' 
-            }
+            },{
+                path:'friendGroup',
+                select : 'name userId userImg'
+            }]
         }).populate({
             path: 'bills',
-            select:'billAmount billActivity createdBy friendGroup share', populate: {
+            select:'billAmount billActivity createdBy friendGroup share', populate: [{
                 path: 'createdBy', 
                 select: 'name userId userImg' 
-            }
+            },{
+                path:'friendGroup',
+                select : 'name userId userImg'
+            }]
         }).exec();
 
         if(!user){
