@@ -5,7 +5,7 @@ const billSchema = mongoose.Schema({
     billActivity : { type: SchemaTypes.String, required: true },
     createdBy:{type: mongoose.Schema.Types.ObjectId, ref:"users", required:true},
     friendGroup: {type:[{type: mongoose.Schema.Types.ObjectId, ref:"users"}], default:[]},
-    share:{type:SchemaTypes.Number}
+    share:{type:SchemaTypes.Number, default:0}
 });
 billSchema.index({ billActivity: 1 }, { unique: false });
 

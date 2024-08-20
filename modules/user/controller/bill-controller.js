@@ -16,14 +16,17 @@ export const addBill = async (request, response, next)=>{
             response.status(200).json({message:"bill successfully made", billId:doc._id})
             console.log("bill added");
             
+            //adding info to the user
             updateUserBills(userId, doc._id);
-            console.log("updateuserbills called")
+            //adding info to the friends
+            updateInFriendsBills(bill, doc._id);
+            
         }else{
             console.log("bill not added")
             response.status(400).json({message:"bill not added some error"})
         }
 
-        //adding info to the user
+        
 
 
     }catch(error){
@@ -33,6 +36,32 @@ export const addBill = async (request, response, next)=>{
     }
 }
 
+//add friend in user friend list
+export const updateInFriendsBills = async( billId, friendId)=>{
+     try{
+        
+        const trackBills = [];
+       
+            console.log("current friendId", friendId)
+            const user = await userModel.findOne({_id:friendId});
+            console.log("user in friend bill", user);
+            user.bills.push(billId);
+            trackBills.push(billId);
+            console.log("friend bills", user);
+            await user.save();
+    
+        
+        if(trackBills.includes(billId)){
+            console.log("successfully added bill in friends");
+        }else{
+            console.log("cannot add in friends bills")
+        }
+     }catch(error){
+       console.log("error in adding friends bill", error)
+     }
+}
+
+//add new bills in user bills
 export const updateUserBills= async (userId,billId)=>{
     try{
         console.log("bill",billId,"userId",userId);
@@ -54,6 +83,7 @@ export const updateUserBills= async (userId,billId)=>{
    
 }
 
+//add friends in bill
 export const addFriendGroup = async(request, response, next)=>{
     try{
         const {billId, friendIds} = request.body.data;
@@ -66,7 +96,11 @@ export const addFriendGroup = async(request, response, next)=>{
 
        for(let friendId of friendIds){
             if(bill.friendGroup.includes(friendId)){
+                
                 alreadyAddedFriends.push(friendId)
+
+                //adding billId in friends bills
+                updateInFriendsBills(billId, friendId);
             }else{
             bill.friendGroup.push(friendId);
         }
@@ -84,16 +118,22 @@ export const addFriendGroup = async(request, response, next)=>{
     }
 }
 
-export const updateShare=()=>{
+//updates share in bill
+export const updateShare=async(request, response, next)=>{
     try{
         const {billId, share}= request.body;
-
-        const updatedBill = billModel.findOneAndUpdate({_id: billId},{share: share},{ new: true });
+        console.log(billId, share);
+        const updatedBill =await billModel.findOneAndUpdate({_id: billId},{share: share},{ new: true });
         if(!updatedBill){
-            return response.status(404).json({message:"share not updated"})
+            response.status(404).json({message:"share not updated"});
+            console.log("error in updating share")
+        }else{
+            response.status(200).json({message:"successfully updated"})
+            console.log("successfully updated")
         }
 
     }catch(error){
+        console.log(error)
         return response.status(400).json({message:"cannot update share"})
     }
 }

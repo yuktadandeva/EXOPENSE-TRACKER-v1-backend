@@ -80,6 +80,9 @@ export const getUser = async (request, response, next)=>{
         const user = await userModel.findOne({userId}).populate({
             path: 'friendList',
             select: 'name userId userImg'
+        }).populate({
+            path: 'bills',
+            select:'billAmount billActivity createdBy friendGroup share'
         }).exec();
 
         if(!user){
