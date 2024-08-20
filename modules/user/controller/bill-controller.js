@@ -1,4 +1,4 @@
-import { request, response } from "express";
+
 import { billModel } from "../model/bill-model.js";
 import { userModel } from "../model/user-model.js";
 
@@ -66,13 +66,13 @@ export const updateUserBills= async (userId,billId)=>{
     try{
         console.log("bill",billId,"userId",userId);
         const user = await userModel.findOne({_id:userId});
-        console.log("user to add bill", user.bills);
-        user.bills.push(billId);
+        console.log("user to add bill", user.userBills);
+        user.userBills.push(billId);
 
         await user.save();
         console.log(user.bills);
-        if(user.bills.includes(billId)){
-            console.log("bills", user.bills);
+        if(user.userBills.includes(billId)){
+            console.log("bills", user.userBills);
             console.log("successfully updated user bills")
         }else{
             console.log("bill not added")
