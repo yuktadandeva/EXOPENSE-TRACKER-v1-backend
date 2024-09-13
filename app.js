@@ -18,7 +18,7 @@ const promise = createConnection();
 
 promise.then(r=>{
 
-    app.listen(PORT, err=>{
+    app.listen(PORT, '0.0.0.0', err=>{
         if(err){
          console.log("Application Crash")
         }else{
